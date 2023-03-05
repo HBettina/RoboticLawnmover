@@ -17,50 +17,50 @@ public class Controller {
         }
     }
 
-    public void setBeginnPositionOfRobotLawnmover(int[][] areaOfGarden, int[] beginnPosition) {
-        int beginnRow = beginnPosition[0];
-        int beginnColumn = beginnPosition[1];
-        areaOfGarden[beginnRow][beginnColumn] = robotLawnmover.getRLSign();
+    public void setStartPositionOfRobotLawnmover(int[][] areaOfGarden, int[] startPosition) {
+        int startRow = startPosition[0];
+        int startColumn = startPosition[1];
+        areaOfGarden[startRow][startColumn] = robotLawnmover.getRLSign();
     }
 
-    public int[] cutTheGrass(int[] beginnPosition, int[][] areaOfGarden) {
+    public int[] cutTheGrass(int[] startPosition, int[][] areaOfGarden) {
         int[] endPosition = new int[2];
         for (int i = 0; countTheNotCuttedAreas(areaOfGarden) != 0; i++) {
-            int beginnRow = beginnPosition[0];
-            int beginnColumn = beginnPosition[1];
+            int startRow = startPosition[0];
+            int startColumn = startPosition[1];
             // It tries to go to the right, if it can and the grass is not cutted in the next place,
-            // it moves one to the right and the grass in the beginnposition is cutted.
-            if (beginnColumn < areaOfGarden[beginnRow].length-1 && areaOfGarden[beginnRow][beginnColumn + 1] != 1) {
-                endPosition = new int[]{beginnRow, beginnColumn + 1};
-                areaOfGarden[beginnRow][beginnColumn] = 1;
+            // it moves one to the right and the grass in the start position is cutted.
+            if (startColumn < areaOfGarden[startRow].length-1 && areaOfGarden[startRow][startColumn + 1] != 1) {
+                endPosition = new int[]{startRow, startColumn + 1};
+                areaOfGarden[startRow][startColumn] = 1;
                 areaOfGarden[endPosition[0]][endPosition[1]] = 3;
-                beginnPosition = endPosition;
+                startPosition = endPosition;
                 System.out.println("The state of the garden:");
                 printAreaOfGarden(areaOfGarden);
                 // If it cannot go to the right, it tries go down if there is area of the garden down
-                // and if the beginn row does not contain noncutted area
-            } else if (areaOfGarden.length - 1 > beginnRow && areaOfGarden[beginnRow + 1].length - 1 >= beginnColumn
-                    && !containsTheCurrantRowNotCuttedArea(areaOfGarden, beginnRow)
-                    && areaOfGarden.length - 1 > beginnRow) {
-                endPosition = new int[]{beginnRow + 1, beginnColumn};
-                areaOfGarden[beginnRow][beginnColumn] = 1;
+                // and if the start row does not contain noncutted area
+            } else if (areaOfGarden.length - 1 > startRow && areaOfGarden[startRow + 1].length - 1 >= startColumn
+                    && !containsTheCurrantRowNotCuttedArea(areaOfGarden, startRow)
+                    && areaOfGarden.length - 1 > startRow) {
+                endPosition = new int[]{startRow + 1, startColumn};
+                areaOfGarden[startRow][startColumn] = 1;
                 areaOfGarden[endPosition[0]][endPosition[1]] = 3;
-                beginnPosition = endPosition;
+                startPosition = endPosition;
                 System.out.println("The state of the garden:");
                 printAreaOfGarden(areaOfGarden);
             } else {
                 // if it cannot go to the right and down, it goes to the left
-                endPosition = new int[]{beginnRow, beginnColumn - 1};
-                areaOfGarden[beginnRow][beginnColumn] = 1;
+                endPosition = new int[]{startRow, startColumn - 1};
+                areaOfGarden[startRow][startColumn] = 1;
                 areaOfGarden[endPosition[0]][endPosition[1]] = 3;
-                beginnPosition = endPosition;
+                startPosition = endPosition;
                 System.out.println("The state of the garden:");
                 printAreaOfGarden(areaOfGarden);
             }
         }
         return endPosition;
 }
-    public int countTheNotCuttedAreas(int[][] areaOfGarden) {
+    private int countTheNotCuttedAreas(int[][] areaOfGarden) {
         int numberOfNotCuttedArea = 0;
         for (int[] row : areaOfGarden) {
             for (int element : row) {
@@ -71,7 +71,7 @@ public class Controller {
         }
         return numberOfNotCuttedArea;
     }
-    public boolean containsTheCurrantRowNotCuttedArea(int[][] areaOfGarden, int indexOfTheRow){
+    private boolean containsTheCurrantRowNotCuttedArea(int[][] areaOfGarden, int indexOfTheRow){
         int[] row = areaOfGarden[indexOfTheRow];
         int numberOfNotCuttedArea = 0;
         for (int i = 0; i < row.length; i++) {
@@ -81,6 +81,26 @@ public class Controller {
         }
         return numberOfNotCuttedArea != 0;
     }
-
-
+    public void goToTheStart(int[][] areaOfGarden, int[] startPosition) {
+        int[] endPosition = new int[2];
+        for (int i = 0; areaOfGarden[0][0] != robotLawnmover.getRLSign(); i++) {
+            int startRow = startPosition[0];
+            int startColumn = startPosition[1];
+            if(startColumn != 0) {
+                endPosition = new int[]{startRow, startColumn - 1};
+                areaOfGarden[startRow][startColumn] = 1;
+                areaOfGarden[endPosition[0]][endPosition[1]] = 3;
+                startPosition = endPosition;
+                System.out.println("The robotic lawnmover is going to the start position:");
+                printAreaOfGarden(areaOfGarden);
+            } else {
+                endPosition = new int[]{startRow - 1, startColumn};
+                areaOfGarden[startRow][startColumn] = 1;
+                areaOfGarden[endPosition[0]][endPosition[1]] = 3;
+                startPosition = endPosition;
+                System.out.println("The robotic lawnmover is going to the start position:");
+                printAreaOfGarden(areaOfGarden);
+            }
+        }
+    }
 }
