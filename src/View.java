@@ -1,19 +1,22 @@
 public class View {
     Controller controller = new Controller();
     Garden garden = new Garden();
-    RobotLawnmover robotLawnmover = new RobotLawnmover();
+    RobotLawnmower robotLawnmower = new RobotLawnmower();
 
     public void simulation() {
-        controller.createGarden();
+        // print the area of the garden
         System.out.println("The area of the garden:");
         controller.printAreaOfGarden(garden.getAreaOfGarden());
-        controller.setStartPositionOfRobotLawnmover(garden.getAreaOfGarden(), robotLawnmover.getStartPosition());
+        // put the robot lawnmover to the start position (top left) and print the garden
+        controller.setStartPositionOfRobotLawnmower(garden.getAreaOfGarden());
         System.out.println("Garden with the start position:");
         controller.printAreaOfGarden(garden.getAreaOfGarden());
-        int[] endPosition = controller.cutTheGrass(robotLawnmover.getStartPosition(), garden.getAreaOfGarden());
-        System.out.println("The grass is cutted on the whole garden.");
+        // cutting of the grass
+        int[] endPosition = controller.cutTheGrass(robotLawnmower.getStartPosition(), garden.getAreaOfGarden());
+        System.out.println("The grass is cut on the whole garden.");
+        // the robot lawnmower moves back to the start position
         controller.goToTheStart(garden.getAreaOfGarden(), endPosition);
-        System.out.println("The robotic lawnmover reached the start position.");
+        System.out.println("The robotic lawnmower reached the start position.");
 
     }
 }
